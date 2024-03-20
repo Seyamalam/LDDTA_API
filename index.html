@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomato Disease Predictor</title>
+    <script>
+        async function predictDisease() {
+            const formData = new FormData();
+            const fileField = document.querySelector('#file');
+            formData.append('file', fileField.files[0]);
+
+            const response = await fetch('http://localhost:8000/predict', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                document.getElementById('result').textContent = `Predicted Class: ${result.class}, Confidence: ${result.confidence}`;
+            } else {
+                alert('Error: ' + response.statusText);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Tomato Disease Predictor</h1>
+    <form onsubmit="event.preventDefault(); predictDisease();">
+        <input type="file" id="file" name="file" accept="image/*" required>
+        <button type="submit">Predict</button>
+    </form>
+    <div id="result"></div>
+</body>
+</html>
